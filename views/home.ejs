@@ -1,28 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('./partials/head') %>
-    <title>Homepage</title>
-  </head>
-  <body>
-    <%- include('./partials/nav') %>
+<head>
+  <%- include('./partials/head') %>
+  <title>Homepage</title>
 
-    <div class="container mt-3">
-      <div class="row row-cols-4">
-        <% blogs.forEach(blog => { %>
-        <div class="col">
-          <div class="card col" style="width: 18rem">
-            <img src="<%= blog.coverImageURL %>" class="card-img-top" />
-            <div class="card-body">
-              <h5 class="card-title"><%= blog.title %></h5>
-              <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
-            </div>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .blog-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .blog-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .blog-image {
+      height: 220px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .blog-card:hover .blog-image {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 1.2rem;
+    }
+
+    .blog-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .read-btn {
+      border-radius: 30px;
+      padding: 6px 18px;
+    }
+
+    .author {
+      font-size: 0.85rem;
+      color: gray;
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('./partials/nav') %>
+
+  <div class="container mt-5">
+
+    <h2 class="mb-4 fw-bold">Latest Blogs</h2>
+
+    <div class="row g-4">
+
+      <% blogs.forEach(blog => { %>
+
+      <div class="col-lg-4 col-md-6 col-sm-12">
+
+        <div class="card blog-card">
+
+          <img src="<%= blog.coverImageURL %>" 
+               class="card-img-top blog-image" 
+               alt="Blog Image">
+
+          <div class="card-body">
+
+            <h5 class="blog-title"><%= blog.title %></h5>
+
+            <p class="author">
+              By <%= blog.createdBy?.fullName || "Admin" %> • 
+              <%= blog.createdAt?.toDateString() %>
+            </p>
+
+            <a href="/blog/<%= blog._id %>" 
+               class="btn btn-dark read-btn mt-2">
+              Read More →
+            </a>
+
           </div>
-        </div>
-        <% }) %>
-      </div>
-    </div>
 
-    <%- include('./partials/scripts') %>
-  </body>
+        </div>
+
+      </div>
+
+      <% }) %>
+
+    </div>
+  </div>
+
+  <%- include('./partials/scripts') %>
+
+</body>
 </html>
