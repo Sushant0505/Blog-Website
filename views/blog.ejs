@@ -1,50 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('./partials/head') %>
-    <title>Blog</title>
-  </head>
-  <body class="bg-info text-dark">
-    <%- include('./partials/nav') %>
+<head>
+  <%- include('./partials/head') %>
+  <title><%= blog.title %></title>
 
-    <div class="container mt-4">
-      <h1><%= blog.title %></h1>
-      <img src="<%= blog.coverImageURL %>" width="300px" />
-      <pre class="mt-3"><%= blog.body %></pre>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .blog-container {
+      max-width: 850px;
+    }
+
+    .blog-title {
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .blog-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .blog-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .author-card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .author-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .comment-card {
+      background: white;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      margin-bottom: 12px;
+      transition: 0.3s ease;
+    }
+
+    .comment-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .comment-img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .comment-content {
+      white-space: pre-wrap;
+    }
+
+    .comment-form textarea {
+      resize: none;
+      border-radius: 10px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <%- include('./partials/nav') %>
+
+  <div class="container blog-container mt-5">
+
+    <!-- Blog Title -->
+    <h1 class="blog-title"><%= blog.title %></h1>
+
+    <!-- Blog Image -->
+    <img src="<%= blog.coverImageURL %>" 
+         class="blog-image" 
+         alt="Blog Image">
+
+    <!-- Blog Content -->
+    <div class="blog-content">
+      <%= blog.body %>
     </div>
 
-    <div class="container mt-4">
-      <img src="<%= blog.createdBy.profileImageURL %>" width="50px" /> <%=
-      blog.createdBy.fullName %>
-    </div>
-
-    <div class="container mt-3">
-      <h1>Comments (<%= comments.length %>)</h1>
-      <% if (locals.user) { %>
-      <form action="/blog/comment/<%= blog._id %>" method="post">
-        <div class="mb-3">
-          <input
-            type="text"
-            name="content"
-            class="form-control"
-            placeholder="Enter your comment"
-          />
-          <button class=" mt-2 btn btn-sm btn-primary" type="submit">Add</button>
-        </div>
-      </form>
-
-      <% } %>
-      <div class="mt-3">
-        <% comments.forEach(comment => { %>
-        <div>
-          <img src="<%= comment.createdBy.profileImageURL %>" width="50px" />
-          <%= comment.createdBy.fullName %>
-          <pre><%= comment.content %></pre>
-        </div>
-        <% }) %>
+    <!-- Author Section -->
+    <div class="author-card">
+      <img src="<%= blog.createdBy.profileImageURL %>" 
+           class="author-img" 
+           alt="Author">
+      <div>
+        <h6 class="mb-0"><%= blog.createdBy.fullName %></h6>
+        <small class="text-muted">
+          Posted on <%= blog.createdAt.toDateString() %>
+        </small>
       </div>
     </div>
 
-    <%- include('./partials/scripts') %>
-  </body>
+    <!-- Comments Section -->
+    <div class="mt-5">
+      <h4 class="mb-3">Comments (<%= comments.length %>)</h4>
+
+      <% if (locals.user) { %>
+      <form action="/blog/comment/<%= blog._id %>" 
+            method="post" 
+            class="comment-form mb-4">
+
+        <div class="mb-3">
+          <textarea name="content"
+                    rows="3"
+                    class="form-control"
+                    placeholder="Write a thoughtful comment..."
+                    required></textarea>
+        </div>
+
+        <button class="btn btn-dark px-4" type="submit">
+          Post Comment
+        </button>
+      </form>
+      <% } else { %>
+        <p class="text-muted">
+          Please login to comment.
+        </p>
+      <% } %>
+
+      <!-- Comment List -->
+      <% comments.forEach(comment => { %>
+
+      <div class="comment-card d-flex gap-3">
+
+        <img src="<%= comment.createdBy.profileImageURL %>" 
+             class="comment-img">
+
+        <div>
+          <strong><%= comment.createdBy.fullName %></strong>
+          <div class="comment-content mt-1">
+            <%= comment.content %>
+          </div>
+        </div>
+
+      </div>
+
+      <% }) %>
+
+    </div>
+
+  </div>
+
+  <%- include('./partials/scripts') %>
+
+</body>
 </html>
