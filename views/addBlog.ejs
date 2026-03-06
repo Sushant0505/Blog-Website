@@ -1,44 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('./partials/head') %>
-    <title>Add New Blog</title>
-  </head>
-  <body>
-    <%- include('./partials/nav') %>
+<head>
+  <%- include('./partials/head') %>
+  <title>Add New Blog</title>
 
-    <div class="container mt-3">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .editor-container {
+      max-width: 800px;
+    }
+
+    .editor-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .form-control {
+      border-radius: 10px;
+    }
+
+    textarea {
+      min-height: 250px;
+      resize: vertical;
+    }
+
+    .preview-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 15px;
+      display: none;
+    }
+
+    .submit-btn {
+      border-radius: 30px;
+      padding: 8px 25px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('./partials/nav') %>
+
+  <div class="container editor-container mt-5">
+
+    <div class="editor-card">
+
+      <h2 class="mb-4 fw-bold">Create New Blog</h2>
+
       <form action="/blog" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-          <label for="coverImage" class="form-label">Cover Image</label>
+
+        <!-- Cover Image -->
+        <div class="mb-4">
+          <label for="coverImage" class="form-label fw-semibold">
+            Cover Image
+          </label>
           <input
             type="file"
             class="form-control"
             id="coverImage"
             name="coverImage"
-            aria-describedby="coverImage"
+            accept="image/*"
+            onchange="previewImage(event)"
+            required
           />
+          <img id="imagePreview" class="preview-img" />
         </div>
-        <div class="mb-3">
-          <label for="title" class="form-label">Title</label>
+
+        <!-- Title -->
+        <div class="mb-4">
+          <label for="title" class="form-label fw-semibold">
+            Blog Title
+          </label>
           <input
             type="text"
             class="form-control"
             id="title"
             name="title"
-            aria-describedby="title"
+            placeholder="Enter an engaging title..."
+            required
           />
         </div>
-        <div class="mb-3">
-          <label for="body">Body</label>
-          <textarea name="body" class="form-control" id="body"></textarea>
+
+        <!-- Body -->
+        <div class="mb-4">
+          <label for="body" class="form-label fw-semibold">
+            Blog Content
+          </label>
+          <textarea
+            name="body"
+            class="form-control"
+            id="body"
+            placeholder="Start writing your blog here..."
+            required
+          ></textarea>
         </div>
-        <div class="mb-3">
-          <button class="btn btn-primary">Submit</button>
+
+        <!-- Submit -->
+        <div>
+          <button class="btn btn-dark submit-btn">
+            Publish Blog 🚀
+          </button>
         </div>
+
       </form>
+
     </div>
 
-    <%- include('./partials/scripts') %>
-  </body>
+  </div>
+
+  <script>
+    function previewImage(event) {
+      const preview = document.getElementById('imagePreview');
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.style.display = 'block';
+    }
+  </script>
+
+  <%- include('./partials/scripts') %>
+
+</body>
 </html>
